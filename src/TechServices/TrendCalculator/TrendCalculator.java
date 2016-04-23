@@ -11,6 +11,8 @@
 package TechServices.TrendCalculator;
 
 //## operation calculateTrend(WFAPeriod) 
+import java.util.ArrayList;
+
 import Business.Model.Trend;
 //## operation calculateTrend(WFAPeriod) 
 import Business.Model.WFAPeriod;
@@ -54,46 +56,46 @@ public class TrendCalculator {
 		//metric calculation
 		
         //calculate sum of entries for the start metric column
-        for(String entry : period.getStart().getEntries().get(metricIndex))
+        for(ArrayList<String> entry : period.getStart().getEntries())
         {
-        	double value = Double.valueOf(entry);
+        	double value = Double.valueOf(entry.get(metricIndex));
         	trend.setStartSumMetric(trend.getStartSumMetric() + value);
         }
         
         //calculate sum of entries for the end metric column
-        for(String entry : period.getEnd().getEntries().get(metricIndex))
+        for(ArrayList<String> entry : period.getEnd().getEntries())
         {
-        	double value = Double.valueOf(entry);
+        	double value = Double.valueOf(entry.get(metricIndex));
         	trend.setEndSumMetric(trend.getEndSumMetric() + value);
         }
 
         //calculate sum of entries for the activity metric column
-        for(String entry : period.getActivity().getEntries().get(metricIndex))
+        for(ArrayList<String> entry : period.getActivity().getEntries())
         {
-        	double value = Double.valueOf(entry);
+        	double value = Double.valueOf(entry.get(metricIndex));
         	trend.setActivitySumMetric(trend.getActivitySumMetric() + value);
         }
 
 		//dims calculation
         
         //calculate sum of entries for the start dims column
-        for(String entry : period.getStart().getEntries().get(dimsIndex))
+        for(ArrayList<String> entry : period.getStart().getEntries())
         {
-        	double value = Double.valueOf(entry);
+        	double value = Double.valueOf(entry.get(dimsIndex));
         	trend.setStartSumDims(trend.getStartSumDims() + value);
         }
         
         //calculate sum of entries for the end dims column
-        for(String entry : period.getEnd().getEntries().get(dimsIndex))
+        for(ArrayList<String> entry : period.getEnd().getEntries())
         {
-        	double value = Double.valueOf(entry);
+        	double value = Double.valueOf(entry.get(dimsIndex));
         	trend.setEndSumDims(trend.getEndSumDims() + value);
         }
 
         //calculate sum of entries for the activity dims column
-        for(String entry : period.getActivity().getEntries().get(dimsIndex))
+        for(ArrayList<String> entry : period.getActivity().getEntries())
         {
-        	double value = Double.valueOf(entry);
+        	double value = Double.valueOf(entry.get(dimsIndex));
         	trend.setActivitySumDims(trend.getActivitySumDims() + value);
         }
         

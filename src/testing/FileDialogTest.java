@@ -60,7 +60,12 @@ public class FileDialogTest {
 	    
 	    
 	    // Constructors
-	    
+
+	    public  WFAPeriod() {
+	    	start = new WFAData();
+	    	end = new WFAData();
+	    	activity = new WFAData();
+	    }
 	    //## auto_generated 
 	    public  WFAPeriod(WFAData start, WFAData end, WFAData activity) {
 	    	this.start = start;
@@ -258,21 +263,22 @@ public class FileDialogTest {
         	   String[] columns = lines.get(0).split(",");
 
         	   //put each column into the WFAData
-        	   //and create a list for that column's data
         	   for(String column : columns)
         	   {
         	       data.getColumns().add(column);
-        	       data.getEntries().add(new ArrayList<String>());
         	   }
 
-        	   //put each entry into the appropriate column
+        	   //put each entry into the list of entries
         	   for (int i = 1; i < lines.size(); i++)
         	   {
         	       String[] line = lines.get(i).split(",");
+        	       
+        	       ArrayList<String> entry = new ArrayList<String>();
         	       for (int j = 0; j < columns.length; j++)
         	       {
-        	           data.getEntries().get(j).add(line[j]);
+        	    	   entry.add(line[j]);
         	       }
+        	       data.getEntries().add(entry);
         	   }
            }
            catch (FileNotFoundException e) {
@@ -305,57 +311,57 @@ public class FileDialogTest {
 
 		//metric calculation
 		
-       //calculate sum of entries for the start metric column
-       for(String entry : period.getStart().getEntries().get(metricIndex))
-       {
-       	double value = Double.valueOf(entry);
-       	trend.setStartSumMetric(trend.getStartSumMetric() + value);
-       }
-       
-       //calculate sum of entries for the end metric column
-       for(String entry : period.getEnd().getEntries().get(metricIndex))
-       {
-       	double value = Double.valueOf(entry);
-       	trend.setEndSumMetric(trend.getEndSumMetric() + value);
-       }
+        //calculate sum of entries for the start metric column
+        for(ArrayList<String> entry : period.getStart().getEntries())
+        {
+        	double value = Double.valueOf(entry.get(metricIndex));
+        	trend.setStartSumMetric(trend.getStartSumMetric() + value);
+        }
+        
+        //calculate sum of entries for the end metric column
+        for(ArrayList<String> entry : period.getEnd().getEntries())
+        {
+        	double value = Double.valueOf(entry.get(metricIndex));
+        	trend.setEndSumMetric(trend.getEndSumMetric() + value);
+        }
 
-       //calculate sum of entries for the activity metric column
-       for(String entry : period.getActivity().getEntries().get(metricIndex))
-       {
-       	double value = Double.valueOf(entry);
-       	trend.setActivitySumMetric(trend.getActivitySumMetric() + value);
-       }
+        //calculate sum of entries for the activity metric column
+        for(ArrayList<String> entry : period.getActivity().getEntries())
+        {
+        	double value = Double.valueOf(entry.get(metricIndex));
+        	trend.setActivitySumMetric(trend.getActivitySumMetric() + value);
+        }
 
 		//dims calculation
-       
-       //calculate sum of entries for the start dims column
-       for(String entry : period.getStart().getEntries().get(dimsIndex))
-       {
-       	double value = Double.valueOf(entry);
-       	trend.setStartSumDims(trend.getStartSumDims() + value);
-       }
-       
-       //calculate sum of entries for the end dims column
-       for(String entry : period.getEnd().getEntries().get(dimsIndex))
-       {
-       	double value = Double.valueOf(entry);
-       	trend.setEndSumDims(trend.getEndSumDims() + value);
-       }
+        
+        //calculate sum of entries for the start dims column
+        for(ArrayList<String> entry : period.getStart().getEntries())
+        {
+        	double value = Double.valueOf(entry.get(dimsIndex));
+        	trend.setStartSumDims(trend.getStartSumDims() + value);
+        }
+        
+        //calculate sum of entries for the end dims column
+        for(ArrayList<String> entry : period.getEnd().getEntries())
+        {
+        	double value = Double.valueOf(entry.get(dimsIndex));
+        	trend.setEndSumDims(trend.getEndSumDims() + value);
+        }
 
-       //calculate sum of entries for the activity dims column
-       for(String entry : period.getActivity().getEntries().get(dimsIndex))
-       {
-       	double value = Double.valueOf(entry);
-       	trend.setActivitySumDims(trend.getActivitySumDims() + value);
-       }
-       
-       //average calculations
-       trend.setStartAverage(trend.getStartSumDims() / trend.getStartSumMetric());
-       trend.setEndAverage(trend.getEndSumDims() / trend.getEndSumMetric());
-       trend.setActivityAverage(trend.getActivitySumDims() / trend.getActivitySumMetric());
-       
-       //trend calculation complete, return trend
-       return trend;
+        //calculate sum of entries for the activity dims column
+        for(ArrayList<String> entry : period.getActivity().getEntries())
+        {
+        	double value = Double.valueOf(entry.get(dimsIndex));
+        	trend.setActivitySumDims(trend.getActivitySumDims() + value);
+        }
+        
+        //average calculations
+        trend.setStartAverage(trend.getStartSumDims() / trend.getStartSumMetric());
+        trend.setEndAverage(trend.getEndSumDims() / trend.getEndSumMetric());
+        trend.setActivityAverage(trend.getActivitySumDims() / trend.getActivitySumMetric());
+        
+        //trend calculation complete, return trend
+        return trend;
    }
    
    /**
@@ -500,7 +506,8 @@ public class FileDialogTest {
     }
     
     //evaluates a single statement without any boolean operations to "true" or "false"
-    public static String evaluateStatement(String statement) {
+    public static String evaluateStatement(ArrayList<String> entries, ArrayList<String> columns, 
+    		String statement) {
     	String evaluation = null;  //true/false evaluation of this statement
     	String[] tokens = statement.split(STATEMENT_REGEX);
 
@@ -508,6 +515,13 @@ public class FileDialogTest {
     	String operation = tokens[1];
     	String operand1 = tokens[0];
     	String operand2 = tokens[2];
+    	
+    	//need to find the matching value for operand1
+    	System.out.print(operand1 + ", " + columns.indexOf(operand1) 
+    			+ ", " + entries.size() + ": ");
+    	
+    	operand1 = entries.get(columns.indexOf(operand1));
+    	System.out.println(operand1);
     	
     	//find matching statement operation
     	//note: the following is a possible candidate for polymorphism
@@ -539,15 +553,16 @@ public class FileDialogTest {
     }
     
     //evaluates a single boolean operation, evaluates operand statements if not "true" or "false"
-    public static String evaluateBooleanOperation(String operation, String operand1, String operand2) {
+    public static String evaluateBooleanOperation(ArrayList<String> entries, ArrayList<String> columns, 
+    		String operation, String operand1, String operand2) {
     	String evaluation = null;  //true/false evaluation of this operation
     	
     	//evaluate operand statements 1 & 2 if it they have not already been evaluated
     	if(!operand1.equals(TRUE) && !operand1.equals(FALSE)) {
-    		operand1 = evaluateStatement(operand1);
+    		operand1 = evaluateStatement(entries, columns, operand1);
     	}
     	if(!operand2.equals(TRUE) && !operand2.equals(FALSE)) {
-    		operand2 = evaluateStatement(operand2);
+    		operand2 = evaluateStatement(entries, columns, operand2);
     	}
     	
     	//perform the indicated logical operation
@@ -567,7 +582,8 @@ public class FileDialogTest {
     }
     
     //evaluates a single operand to true/false
-    public static String evaluateGroup(String operand) {
+    public static String evaluateGroup(ArrayList<String> entries, ArrayList<String> columns, 
+    		String operand) {
     	//create stacks to evaluate the operand with
     	Stack<String> operands = new Stack<String>();
 		Stack<String> operations = new Stack<String>();
@@ -577,7 +593,7 @@ public class FileDialogTest {
     	
     	//check for degenerate case of one statement/token
     	if(tokens.length == 1) {
-    		return evaluateStatement(tokens[0]); 
+    		return evaluateStatement(entries, columns, tokens[0]); 
     	}
     	else {
     		//put operands and operators into their respective stacks
@@ -594,7 +610,8 @@ public class FileDialogTest {
         		String operation = operations.pop();
         		String operand1 = operands.pop();
         		String operand2 = operands.pop();
-        		operands.push(evaluateBooleanOperation(operation, operand1, operand2));
+        		operands.push(evaluateBooleanOperation(entries, columns,
+        				operation, operand1, operand2));
         	}
 
         	//return evaluation of this operand group
@@ -603,15 +620,16 @@ public class FileDialogTest {
     }
     
     //evaluates a single boolean operation, evaluates operand groups if not "true" or "false"
-    public static String evaluateBooleanOperations(String operation, String operand1, String operand2) {
+    public static String evaluateBooleanOperations(ArrayList<String> entries, ArrayList<String> columns, 
+    		String operation, String operand1, String operand2) {
     	String evaluation = null;  //true/false evaluation of this operation
     	
     	//evaluate operand groups 1 & 2 if it they have not already been evaluated
     	if(!operand1.equals(TRUE) && !operand1.equals(FALSE)) {
-    		operand1 = evaluateGroup(operand1);
+    		operand1 = evaluateGroup(entries, columns, operand1);
     	}
     	if(!operand2.equals(TRUE) && !operand2.equals(FALSE)) {
-    		operand2 = evaluateGroup(operand2);
+    		operand2 = evaluateGroup(entries, columns, operand2);
     	}
     	
     	//perform the indicated logical operation
@@ -629,9 +647,10 @@ public class FileDialogTest {
     	//return evaluation of this operation
     	return evaluation;
     }
-    
+
     //evaluates a string operation to true or false
-    private Boolean evaluateOperation(String input) {
+    private Boolean passesFilter(ArrayList<String> entries, ArrayList<String> columns, 
+    		String input) {
     	//check if string is empty
     	if (input != null && !input.isEmpty()) {
     		Stack<String> operands = new Stack<String>();
@@ -642,7 +661,7 @@ public class FileDialogTest {
         	
         	//check for degenerate case of one statement/token
         	if(tokens.length == 1) {
-        		return evaluateGroup(tokens[0]).equals(TRUE) ? true : false; 
+        		return evaluateGroup(entries, columns, tokens[0]).equals(TRUE) ? true : false; 
         	}
         	else {
             	//put operands and operators into their respective stacks
@@ -659,7 +678,8 @@ public class FileDialogTest {
             		String operation = operations.pop();
             		String operand1 = operands.pop();
             		String operand2 = operands.pop();
-            		operands.push(evaluateBooleanOperations(operation, operand1, operand2));
+            		operands.push(evaluateBooleanOperations(entries, columns,
+            				operation, operand1, operand2));
             	}
             	
             	return operands.pop().equals(TRUE) ? true : false;
@@ -671,12 +691,62 @@ public class FileDialogTest {
     	}
     }
     
+
+    /**
+     * @param period
+     * @param filters
+    */
+    public WFAPeriod getFilteredPeriod(WFAPeriod period, String filter) {
+    	WFAPeriod filteredPeriod = new WFAPeriod();  //filtered period to return
+    	
+    	//copy over columns
+    	filteredPeriod.getStart().setColumns(period.getStart().getColumns());
+    	filteredPeriod.getEnd().setColumns(period.getEnd().getColumns());
+    	filteredPeriod.getActivity().setColumns(period.getActivity().getColumns());
+    	
+    	//add start entries that pass the filter
+    	for(ArrayList<String> entry : period.getStart().getEntries()) {
+    		if (passesFilter(entry, period.getStart().getColumns(), filter)){
+    			filteredPeriod.getStart().getEntries().add(entry);
+    		}
+    	}
+    	
+    	//add end entries that pass the filter
+    	for(ArrayList<String> entry : period.getEnd().getEntries()) {
+    		if (passesFilter(entry, period.getEnd().getColumns(), filter)){
+    			filteredPeriod.getEnd().getEntries().add(entry);
+    		}
+    	}
+
+    	//add start entries that pass the filter
+    	for(ArrayList<String> entry : period.getActivity().getEntries()) {
+    		if (passesFilter(entry, period.getActivity().getColumns(), filter)){
+    			filteredPeriod.getActivity().getEntries().add(entry);
+    		}
+    	}
+    	
+    	//return filtered period
+    	return filteredPeriod;
+    }
+    
     public static void main(String[] args) {
     	String input = "::CN:OP:EV::LO::CN:OP:EV::LO::CN:OP:EV::LO::CN:OP:EV::&&&L1&&&::CN:OP:EV::LO::CN:OP:EV::LO::CN:OP:EV::LO::CN:OP:EV::&&&L2&&&::CN:OP:EV::LO::CN:OP:EV::LO::CN:OP:EV::LO::CN:OP:EV::";
     	//String test = "false::or::true&&&or&&&true::or::false::and::false&&&";
     	//String test = "lies:!=:pies&&&and&&&true::or::false::and::1:!=:2";
-    	String test = "lies:!=:pies::or::false::and::1:!=:2";
+    	String test = "Headcount:==:0&&&and&&&State:==:E::or::State:==:G";
+
+    	FileDialogTest foo = new FileDialogTest();
+    	WFAData start = foo.selectCSVFile();
+    	WFAData end = foo.selectCSVFile();
+    	WFAData activity = foo.selectCSVFile();
+    	WFAPeriod period = foo.new WFAPeriod(start, end, activity);
+    	WFAPeriod filteredPeriod = foo.getFilteredPeriod(period, test);
+    	Trend trend = foo.calculateTrend(filteredPeriod, "Headcount", "Std Hours/Week");
+    	String report = foo.generateReport(trend, "Headcount", "Std Hours/Week");
+    	System.out.println(report);
     	
+    	
+    	/*
     	//check if string is empty
     	if (input != null && !input.isEmpty()) {
     		Stack<String> operands = new Stack<String>();
@@ -712,7 +782,7 @@ public class FileDialogTest {
     	}
     	else {
     		//no filtering boolean operations, thus return given WFA Period
-    	}
+    	}*/
     	
     	/*
     	FileDialogTest foo = new FileDialogTest();

@@ -18,6 +18,7 @@ import java.util.Scanner;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+
 //## operation selectCSVFile() 
 import Business.Model.WFAData;
 
@@ -76,21 +77,22 @@ public class CSVReader {
         	   String[] columns = lines.get(0).split(",");
 
         	   //put each column into the WFAData
-        	   //and create a list for that column's data
         	   for(String column : columns)
         	   {
         	       data.getColumns().add(column);
-        	       data.getEntries().add(new ArrayList<String>());
         	   }
 
-        	   //put each entry into the appropriate column
+        	   //put each entry into the list of entries
         	   for (int i = 1; i < lines.size(); i++)
         	   {
         	       String[] line = lines.get(i).split(",");
+        	       
+        	       ArrayList<String> entry = new ArrayList<String>();
         	       for (int j = 0; j < columns.length; j++)
         	       {
-        	           data.getEntries().get(j).add(line[j]);
+        	    	   entry.add(line[j]);
         	       }
+        	       data.getEntries().add(entry);
         	   }
            }
            catch (FileNotFoundException e) {
