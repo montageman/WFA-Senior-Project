@@ -14,6 +14,7 @@ import java.util.Stack;
 
 
 
+
 //## operation getFilteredPeriod(WFAPeriod,String) 
 import Business.Model.WFAPeriod;
 
@@ -53,47 +54,47 @@ public class BooleanOperationExecutor {
     }
     
     //AND
-    private String and(String operand1, String operand2) {
+    public static String and(String operand1, String operand2) {
     	return operand1.equals(TRUE) && operand2.equals(TRUE) ? TRUE : FALSE;
     }
     
     //OR
-    private String or(String operand1, String operand2) {
+    public static String or(String operand1, String operand2) {
     	return operand1.equals(TRUE) || operand2.equals(TRUE) ? TRUE : FALSE;
     }
     
     //EQUAL_TO
-    private String equalTo(String operand1, String operand2) {
+    public static String equalTo(String operand1, String operand2) {
     	return operand1.equals(operand2) ? TRUE : FALSE;
     }
 
     //NOT_EQUAL_TO
-    private String notEqualTo(String operand1, String operand2) {
+    public static String notEqualTo(String operand1, String operand2) {
     	return !operand1.equals(operand2) ? TRUE : FALSE;
     }
 
     //GREATER_THAN
-    private String greaterThan(String operand1, String operand2) {
+    public static String greaterThan(String operand1, String operand2) {
     	return Double.valueOf(operand1) > Double.valueOf(operand2) ? TRUE : FALSE;
     }
 
     //LESS_THAN
-    private String lessThan(String operand1, String operand2) {
+    public static String lessThan(String operand1, String operand2) {
     	return Double.valueOf(operand1) < Double.valueOf(operand2) ? TRUE : FALSE;
     }
 
     //GREATER_THAN_OR_EQUAL_TO
-    private String greaterThanOrEqualTo(String operand1, String operand2) {
+    public static String greaterThanOrEqualTo(String operand1, String operand2) {
     	return Double.valueOf(operand1) >= Double.valueOf(operand2) ? TRUE : FALSE;
     }
 
     //LESS_THAN_OR_EQUAL_TO
-    private String lessThanOrEqualTo(String operand1, String operand2) {
+    public static String lessThanOrEqualTo(String operand1, String operand2) {
     	return Double.valueOf(operand1) <= Double.valueOf(operand2) ? TRUE : FALSE;
     }
     
     //evaluates a single statement without any boolean operations to "true" or "false"
-    private String evaluateStatement(String statement) {
+    public static String evaluateStatement(String statement) {
     	String evaluation = null;  //true/false evaluation of this statement
     	String[] tokens = statement.split(STATEMENT_REGEX);
 
@@ -132,7 +133,7 @@ public class BooleanOperationExecutor {
     }
     
     //evaluates a single boolean operation, evaluates operand statements if not "true" or "false"
-    private String evaluateBooleanOperation(String operation, String operand1, String operand2) {
+    public static String evaluateBooleanOperation(String operation, String operand1, String operand2) {
     	String evaluation = null;  //true/false evaluation of this operation
     	
     	//evaluate operand statements 1 & 2 if it they have not already been evaluated
@@ -160,7 +161,7 @@ public class BooleanOperationExecutor {
     }
     
     //evaluates a single operand to true/false
-    private String evaluateGroup(String operand) {
+    public static String evaluateGroup(String operand) {
     	//create stacks to evaluate the operand with
     	Stack<String> operands = new Stack<String>();
 		Stack<String> operations = new Stack<String>();
@@ -168,29 +169,35 @@ public class BooleanOperationExecutor {
 		//split operations using regex
     	String[] tokens = operand.split(OPERAND_REGEX);
     	
-    	//put operands and operators into their respective stacks
-    	//note: we add them in reverse to preserve stack order
-    	for(int i = tokens.length - 1; i >= 0; i = i - 2) { 
-    		operands.push(tokens[i]);
+    	//check for degenerate case of one statement/token
+    	if(tokens.length == 1) {
+    		return evaluateStatement(tokens[0]); 
     	}
-    	for(int i = tokens.length - 2; i >= 0; i = i - 2) { 
-    		operations.push(tokens[i]);
-    	}
-    	
-    	//execute operations until the stack is empty
-    	while(!operations.isEmpty()) {
-    		String operation = operations.pop();
-    		String operand1 = operands.pop();
-    		String operand2 = operands.pop();
-    		operands.push(evaluateBooleanOperation(operation, operand1, operand2));
-    	}
+    	else {
+    		//put operands and operators into their respective stacks
+        	//note: we add them in reverse to preserve stack order
+        	for(int i = tokens.length - 1; i >= 0; i = i - 2) { 
+        		operands.push(tokens[i]);
+        	}
+        	for(int i = tokens.length - 2; i >= 0; i = i - 2) { 
+        		operations.push(tokens[i]);
+        	}
+        	
+        	//execute operations until the stack is empty
+        	while(!operations.isEmpty()) {
+        		String operation = operations.pop();
+        		String operand1 = operands.pop();
+        		String operand2 = operands.pop();
+        		operands.push(evaluateBooleanOperation(operation, operand1, operand2));
+        	}
 
-    	//return evaluation of this operand group
-    	return operands.pop();
+        	//return evaluation of this operand group
+        	return operands.pop();
+    	}
     }
     
     //evaluates a single boolean operation, evaluates operand groups if not "true" or "false"
-    private String evaluateBooleanOperations(String operation, String operand1, String operand2) {
+    public static String evaluateBooleanOperations(String operation, String operand1, String operand2) {
     	String evaluation = null;  //true/false evaluation of this operation
     	
     	//evaluate operand groups 1 & 2 if it they have not already been evaluated
@@ -215,41 +222,6 @@ public class BooleanOperationExecutor {
     	
     	//return evaluation of this operation
     	return evaluation;
-    }
-    
-    //evaluates a string operation to true or false
-    private Boolean evaluateOperation(String input) {
-    	//check if string is empty
-    	if (input != null && !input.isEmpty()) {
-    		Stack<String> operands = new Stack<String>();
-    		Stack<String> operations = new Stack<String>();
-    		
-    		//split operations using regex
-        	String[] tokens = input.split(OPERATION_REGEX);
-        	
-        	//put operands and operators into their respective stacks
-        	//note: we add them in reverse to preserve stack order
-        	for(int i = tokens.length - 1; i >= 0; i = i - 2) { 
-        		operands.push(tokens[i]);
-        	}
-        	for(int i = tokens.length - 2; i >= 0; i = i - 2) { 
-        		operations.push(tokens[i]);
-        	}
-        	
-        	//evaluate boolean operations until the stack is empty
-        	while(!operations.isEmpty()) {
-        		String operation = operations.pop();
-        		String operand1 = operands.pop();
-        		String operand2 = operands.pop();
-        		operands.push(evaluateBooleanOperations(operation, operand1, operand2));
-        	}
-        	
-        	return operands.pop().equals(TRUE) ? true : false;
-    	}
-    	else {
-    		//no filtering boolean operations, thus return true
-    		return true;
-    	}
     }
     
     /**

@@ -575,25 +575,31 @@ public class FileDialogTest {
 		//split operations using regex
     	String[] tokens = operand.split(OPERAND_REGEX);
     	
-    	//put operands and operators into their respective stacks
-    	//note: we add them in reverse to preserve stack order
-    	for(int i = tokens.length - 1; i >= 0; i = i - 2) { 
-    		operands.push(tokens[i]);
+    	//check for degenerate case of one statement/token
+    	if(tokens.length == 1) {
+    		return evaluateStatement(tokens[0]); 
     	}
-    	for(int i = tokens.length - 2; i >= 0; i = i - 2) { 
-    		operations.push(tokens[i]);
-    	}
-    	
-    	//execute operations until the stack is empty
-    	while(!operations.isEmpty()) {
-    		String operation = operations.pop();
-    		String operand1 = operands.pop();
-    		String operand2 = operands.pop();
-    		operands.push(evaluateBooleanOperation(operation, operand1, operand2));
-    	}
+    	else {
+    		//put operands and operators into their respective stacks
+        	//note: we add them in reverse to preserve stack order
+        	for(int i = tokens.length - 1; i >= 0; i = i - 2) { 
+        		operands.push(tokens[i]);
+        	}
+        	for(int i = tokens.length - 2; i >= 0; i = i - 2) { 
+        		operations.push(tokens[i]);
+        	}
+        	
+        	//execute operations until the stack is empty
+        	while(!operations.isEmpty()) {
+        		String operation = operations.pop();
+        		String operand1 = operands.pop();
+        		String operand2 = operands.pop();
+        		operands.push(evaluateBooleanOperation(operation, operand1, operand2));
+        	}
 
-    	//return evaluation of this operand group
-    	return operands.pop();
+        	//return evaluation of this operand group
+        	return operands.pop();
+    	}
     }
     
     //evaluates a single boolean operation, evaluates operand groups if not "true" or "false"
@@ -624,10 +630,52 @@ public class FileDialogTest {
     	return evaluation;
     }
     
+    //evaluates a string operation to true or false
+    private Boolean evaluateOperation(String input) {
+    	//check if string is empty
+    	if (input != null && !input.isEmpty()) {
+    		Stack<String> operands = new Stack<String>();
+    		Stack<String> operations = new Stack<String>();
+    		
+    		//split operations using regex
+        	String[] tokens = input.split(OPERATION_REGEX);
+        	
+        	//check for degenerate case of one statement/token
+        	if(tokens.length == 1) {
+        		return evaluateGroup(tokens[0]).equals(TRUE) ? true : false; 
+        	}
+        	else {
+            	//put operands and operators into their respective stacks
+            	//note: we add them in reverse to preserve stack order
+            	for(int i = tokens.length - 1; i >= 0; i = i - 2) { 
+            		operands.push(tokens[i]);
+            	}
+            	for(int i = tokens.length - 2; i >= 0; i = i - 2) { 
+            		operations.push(tokens[i]);
+            	}
+            	
+            	//evaluate boolean operations until the stack is empty
+            	while(!operations.isEmpty()) {
+            		String operation = operations.pop();
+            		String operand1 = operands.pop();
+            		String operand2 = operands.pop();
+            		operands.push(evaluateBooleanOperations(operation, operand1, operand2));
+            	}
+            	
+            	return operands.pop().equals(TRUE) ? true : false;
+        	}
+    	}
+    	else {
+    		//no filtering operations, thus return true
+    		return true;
+    	}
+    }
+    
     public static void main(String[] args) {
     	String input = "::CN:OP:EV::LO::CN:OP:EV::LO::CN:OP:EV::LO::CN:OP:EV::&&&L1&&&::CN:OP:EV::LO::CN:OP:EV::LO::CN:OP:EV::LO::CN:OP:EV::&&&L2&&&::CN:OP:EV::LO::CN:OP:EV::LO::CN:OP:EV::LO::CN:OP:EV::";
     	//String test = "false::or::true&&&or&&&true::or::false::and::false&&&";
-    	String test = "false::or::lies:!=:pies&&&and&&&true::or::false::and::1:!=:2";
+    	//String test = "lies:!=:pies&&&and&&&true::or::false::and::1:!=:2";
+    	String test = "lies:!=:pies::or::false::and::1:!=:2";
     	
     	//check if string is empty
     	if (input != null && !input.isEmpty()) {
@@ -637,25 +685,30 @@ public class FileDialogTest {
     		//split operations using regex
         	String[] tokens = test.split(OPERATION_REGEX);
         	
-        	//put operands and operators into their respective stacks
-        	//note: we add them in reverse to preserve stack order
-        	for(int i = tokens.length - 1; i >= 0; i = i - 2) { 
-        		operands.push(tokens[i]);
+        	//check for degenerate case of one statement/token
+        	if(tokens.length == 1) {
+            	System.out.println(evaluateGroup(tokens[0]));
         	}
-        	for(int i = tokens.length - 2; i >= 0; i = i - 2) { 
-        		operations.push(tokens[i]);
+        	else {
+            	//put operands and operators into their respective stacks
+            	//note: we add them in reverse to preserve stack order
+            	for(int i = tokens.length - 1; i >= 0; i = i - 2) { 
+            		operands.push(tokens[i]);
+            	}
+            	for(int i = tokens.length - 2; i >= 0; i = i - 2) { 
+            		operations.push(tokens[i]);
+            	}
+            	
+            	//evaluate boolean operations until the stack is empty
+            	while(!operations.isEmpty()) {
+            		String operation = operations.pop();
+            		String operand1 = operands.pop();
+            		String operand2 = operands.pop();
+            		operands.push(evaluateBooleanOperations(operation, operand1, operand2));
+            	}
+
+            	System.out.println(operands.pop());
         	}
-        	
-        	//evaluate boolean operations until the stack is empty
-        	while(!operations.isEmpty()) {
-        		String operation = operations.pop();
-        		String operand1 = operands.pop();
-        		String operand2 = operands.pop();
-        		operands.push(evaluateBooleanOperations(operation, operand1, operand2));
-        	}
-        	
-        	//print evaluation of operand for testing
-        	System.out.println(operands.pop());
     	}
     	else {
     		//no filtering boolean operations, thus return given WFA Period
