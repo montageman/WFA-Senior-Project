@@ -21,9 +21,9 @@ package Business.Model;
 //## class Trend 
 public class Trend {
     
-    protected double activityAverage;		//## attribute activityAverage 
+	protected double activityAverage;		//## attribute activityAverage 
     
-    protected double activitySumDums;		//## attribute activitySumDums 
+    protected double activitySumDims;		//## attribute activitySumDums 
     
     protected double activitySumMetric;		//## attribute activitySumMetric 
     
@@ -31,7 +31,7 @@ public class Trend {
     
     protected double endSumDims;		//## attribute endSumDims 
     
-    protected double endSumMetrc;		//## attribute endSumMetrc 
+    protected double endSumMetric;		//## attribute endSumMetrc 
     
     protected double startAverage;		//## attribute startAverage 
     
@@ -44,6 +44,15 @@ public class Trend {
     
     //## auto_generated 
     public  Trend() {
+    	activityAverage = 0.0;
+    	activitySumDims = 0.0;
+    	activitySumMetric = 0.0;
+    	endAverage = 0.0;
+    	endSumDims = 0.0;
+    	endSumMetric = 0.0;
+    	startAverage = 0.0;
+    	startSumDims = 0.0;
+    	startSumMetric = 0.0;
     }
     
     //## auto_generated 
@@ -57,13 +66,13 @@ public class Trend {
     }
     
     //## auto_generated 
-    public double getActivitySumDums() {
-        return activitySumDums;
+    public double getActivitySumDims() {
+        return activitySumDims;
     }
     
     //## auto_generated 
-    public void setActivitySumDums(double p_activitySumDums) {
-        activitySumDums = p_activitySumDums;
+    public void setActivitySumDims(double p_activitySumDims) {
+        activitySumDims = p_activitySumDims;
     }
     
     //## auto_generated 
@@ -97,13 +106,13 @@ public class Trend {
     }
     
     //## auto_generated 
-    public double getEndSumMetrc() {
-        return endSumMetrc;
+    public double getEndSumMetric() {
+        return endSumMetric;
     }
     
     //## auto_generated 
-    public void setEndSumMetrc(double p_endSumMetrc) {
-        endSumMetrc = p_endSumMetrc;
+    public void setEndSumMetric(double p_endSumMetrc) {
+        endSumMetric = p_endSumMetrc;
     }
     
     //## auto_generated 

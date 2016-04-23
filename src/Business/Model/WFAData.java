@@ -10,7 +10,7 @@
 
 package Business.Model;
 
-import java.util.List;
+import java.util.ArrayList;
 
 
 //----------------------------------------------------------------------------
@@ -23,34 +23,36 @@ import java.util.List;
 //## class WFAData 
 public class WFAData {
     
-    protected List<String> columns;		//## attribute columns 
+	protected ArrayList<String> columns;		//## attribute columns 
     
-    protected List<List<String>> entries;		//## attribute entries 
+    protected ArrayList<ArrayList<String>> entries;		//## attribute entries 
     
     
     // Constructors
     
     //## auto_generated 
     public  WFAData() {
+    	columns = new ArrayList<String>();
+    	entries = new ArrayList<ArrayList<String>>();
     }
     
     //## auto_generated 
-    public List<String> getColumns() {
+    public ArrayList<String> getColumns() {
         return columns;
     }
     
     //## auto_generated 
-    public void setColumns(List<String> p_columns) {
+    public void setColumns(ArrayList<String> p_columns) {
         columns = p_columns;
     }
     
     //## auto_generated 
-    public List<List<String>> getEntries() {
+    public ArrayList<ArrayList<String>> getEntries() {
         return entries;
     }
     
     //## auto_generated 
-    public void setEntries(List<List<String>> p_entries) {
+    public void setEntries(ArrayList<ArrayList<String>> p_entries) {
         entries = p_entries;
     }
     
