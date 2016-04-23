@@ -55,48 +55,48 @@ public class BooleanOperationExecutor {
     public  BooleanOperationExecutor() {
     }
     
-  //AND
-    public static String and(String operand1, String operand2) {
+    //AND
+    private String and(String operand1, String operand2) {
     	return operand1.equals(TRUE) && operand2.equals(TRUE) ? TRUE : FALSE;
     }
     
     //OR
-    public static String or(String operand1, String operand2) {
+    private String or(String operand1, String operand2) {
     	return operand1.equals(TRUE) || operand2.equals(TRUE) ? TRUE : FALSE;
     }
     
     //EQUAL_TO
-    public static String equalTo(String operand1, String operand2) {
+    private String equalTo(String operand1, String operand2) {
     	return operand1.equals(operand2) ? TRUE : FALSE;
     }
 
     //NOT_EQUAL_TO
-    public static String notEqualTo(String operand1, String operand2) {
+    private String notEqualTo(String operand1, String operand2) {
     	return !operand1.equals(operand2) ? TRUE : FALSE;
     }
 
     //GREATER_THAN
-    public static String greaterThan(String operand1, String operand2) {
+    private String greaterThan(String operand1, String operand2) {
     	return Double.valueOf(operand1) > Double.valueOf(operand2) ? TRUE : FALSE;
     }
 
     //LESS_THAN
-    public static String lessThan(String operand1, String operand2) {
+    private String lessThan(String operand1, String operand2) {
     	return Double.valueOf(operand1) < Double.valueOf(operand2) ? TRUE : FALSE;
     }
 
     //GREATER_THAN_OR_EQUAL_TO
-    public static String greaterThanOrEqualTo(String operand1, String operand2) {
+    private String greaterThanOrEqualTo(String operand1, String operand2) {
     	return Double.valueOf(operand1) >= Double.valueOf(operand2) ? TRUE : FALSE;
     }
 
     //LESS_THAN_OR_EQUAL_TO
-    public static String lessThanOrEqualTo(String operand1, String operand2) {
+    private String lessThanOrEqualTo(String operand1, String operand2) {
     	return Double.valueOf(operand1) <= Double.valueOf(operand2) ? TRUE : FALSE;
     }
     
     //evaluates a single statement without any boolean operations to "true" or "false"
-    public static String evaluateStatement(ArrayList<String> entries, ArrayList<String> columns, 
+    private String evaluateStatement(ArrayList<String> entries, ArrayList<String> columns, 
     		String statement) {
     	String evaluation = null;  //true/false evaluation of this statement
     	String[] tokens = statement.split(STATEMENT_REGEX);
@@ -143,7 +143,7 @@ public class BooleanOperationExecutor {
     }
     
     //evaluates a single boolean operation, evaluates operand statements if not "true" or "false"
-    public static String evaluateBooleanOperation(ArrayList<String> entries, ArrayList<String> columns, 
+    private String evaluateBooleanOperation(ArrayList<String> entries, ArrayList<String> columns, 
     		String operation, String operand1, String operand2) {
     	String evaluation = null;  //true/false evaluation of this operation
     	
@@ -172,7 +172,7 @@ public class BooleanOperationExecutor {
     }
     
     //evaluates a single operand to true/false
-    public static String evaluateGroup(ArrayList<String> entries, ArrayList<String> columns, 
+    private String evaluateGroup(ArrayList<String> entries, ArrayList<String> columns, 
     		String operand) {
     	//create stacks to evaluate the operand with
     	Stack<String> operands = new Stack<String>();
@@ -210,7 +210,7 @@ public class BooleanOperationExecutor {
     }
     
     //evaluates a single boolean operation, evaluates operand groups if not "true" or "false"
-    public static String evaluateBooleanOperations(ArrayList<String> entries, ArrayList<String> columns, 
+    private String evaluateBooleanOperations(ArrayList<String> entries, ArrayList<String> columns, 
     		String operation, String operand1, String operand2) {
     	String evaluation = null;  //true/false evaluation of this operation
     	
@@ -280,11 +280,24 @@ public class BooleanOperationExecutor {
     		return true;
     	}
     }
-    
 
     /**
-     * @param period
-     * @param filters
+     * This method filters a WFAPeriod given a sting containing a filter
+     * It accepts any number of logical operations and statements including
+     * zero. 
+     * 
+     * Sample filter: "Headcount:==:0&&&and&&&State:==:E::or::State:==:G"
+     * 
+     * Where:
+     * "&&&" is the public OPERATION_REGEX 
+     * "::" is the OPERAND_REGEX
+     * ":" is the STATEMENT_REGEX
+     * 
+     * @author Daren Cheng
+     * @param period the period to be filtered
+     * @param filter a string containing the filter for this period. This 
+     * filter must use the regex string constants defined by class
+     * @return WFAPeriod that has been filtered by the given filter
     */
     public WFAPeriod getFilteredPeriod(WFAPeriod period, String filter) {
     	WFAPeriod filteredPeriod = new WFAPeriod();  //filtered period to return
