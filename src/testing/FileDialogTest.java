@@ -440,39 +440,102 @@ public class FileDialogTest {
 	    }
 	}
 
+    //regex values
     public static final String OPERATION_REGEX = "&&&";
     public static final String OPERAND_REGEX = "::";
-    public static final String FILTER_REGEX = ":";
+    public static final String STATEMENT_REGEX = ":";
+    
+    //boolean operations and constants
     public static final String TRUE = "true";
     public static final String FALSE = "false";
     public static final String AND = "and";
     public static final String OR = "or";
-
+    
+    //statement operations
+    public static final String EQUAL_TO = "==";
+    public static final String NOT_EQUAL_TO = "!=";
+    public static final String GREATER_THAN = ">";
+    public static final String LESS_THAN = "<";
+    public static final String GREATER_THAN_OR_EQUAL_TO = ">=";
+    public static final String LESS_THAN_OR_EQUAL_TO = "<=";
+    
+    //AND
     public static String and(String operand1, String operand2) {
-    	if (operand1.equals(TRUE) && operand2.equals(TRUE))
-    	{
-    		return TRUE;
-    	}
-    	else 
-    	{
-    		return FALSE;
-    	}
+    	return operand1.equals(TRUE) && operand2.equals(TRUE) ? TRUE : FALSE;
     }
     
+    //OR
     public static String or(String operand1, String operand2) {
-    	if (operand1.equals(TRUE) || operand2.equals(TRUE))
-    	{
-    		return TRUE;
-    	}
-    	else 
-    	{
-    		return FALSE;
-    	}
+    	return operand1.equals(TRUE) || operand2.equals(TRUE) ? TRUE : FALSE;
+    }
+    
+    //EQUAL_TO
+    public static String equalTo(String operand1, String operand2) {
+    	return operand1.equals(operand2) ? TRUE : FALSE;
+    }
+
+    //NOT_EQUAL_TO
+    public static String notEqualTo(String operand1, String operand2) {
+    	return !operand1.equals(operand2) ? TRUE : FALSE;
+    }
+
+    //GREATER_THAN
+    public static String greaterThan(String operand1, String operand2) {
+    	return Double.valueOf(operand1) > Double.valueOf(operand2) ? TRUE : FALSE;
+    }
+
+    //LESS_THAN
+    public static String lessThan(String operand1, String operand2) {
+    	return Double.valueOf(operand1) < Double.valueOf(operand2) ? TRUE : FALSE;
+    }
+
+    //GREATER_THAN_OR_EQUAL_TO
+    public static String greaterThanOrEqualTo(String operand1, String operand2) {
+    	return Double.valueOf(operand1) >= Double.valueOf(operand2) ? TRUE : FALSE;
+    }
+
+    //LESS_THAN_OR_EQUAL_TO
+    public static String lessThanOrEqualTo(String operand1, String operand2) {
+    	return Double.valueOf(operand1) <= Double.valueOf(operand2) ? TRUE : FALSE;
     }
     
     //evaluates a single statement without any boolean operations to "true" or "false"
     public static String evaluateStatement(String statement) {
-    	return null;
+    	String evaluation = null;  //true/false evaluation of this statement
+    	String[] tokens = statement.split(STATEMENT_REGEX);
+
+    	//we should always have three tokens as follows
+    	String operation = tokens[1];
+    	String operand1 = tokens[0];
+    	String operand2 = tokens[2];
+    	
+    	//find matching statement operation
+    	//note: the following is a possible candidate for polymorphism
+    	if(operation.equals(EQUAL_TO)) {
+    		evaluation = equalTo(operand1, operand2);
+    	}
+    	else if(operation.equals(NOT_EQUAL_TO)) {
+    		evaluation = notEqualTo(operand1, operand2);
+    	}
+    	else if(operation.equals(GREATER_THAN)) {
+    		evaluation = greaterThan(operand1, operand2);
+    	}
+    	else if(operation.equals(LESS_THAN)) {
+    		evaluation = lessThan(operand1, operand2);
+    	}
+    	else if(operation.equals(GREATER_THAN_OR_EQUAL_TO)) {
+    		evaluation = greaterThanOrEqualTo(operand1, operand2);
+    	}
+    	else if(operation.equals(LESS_THAN_OR_EQUAL_TO)) {
+    		evaluation = lessThanOrEqualTo(operand1, operand2);
+    	}
+    	else {
+    		//should never execute, print error message indicating so
+    		System.out.println("Error, unexpected statement operation: " + operation);
+    	}
+    	
+    	//return evaluation of this statement
+    	return evaluation;
     }
     
     //evaluates a single boolean operation, evaluates operand statements if not "true" or "false"
@@ -564,7 +627,7 @@ public class FileDialogTest {
     public static void main(String[] args) {
     	String input = "::CN:OP:EV::LO::CN:OP:EV::LO::CN:OP:EV::LO::CN:OP:EV::&&&L1&&&::CN:OP:EV::LO::CN:OP:EV::LO::CN:OP:EV::LO::CN:OP:EV::&&&L2&&&::CN:OP:EV::LO::CN:OP:EV::LO::CN:OP:EV::LO::CN:OP:EV::";
     	//String test = "false::or::true&&&or&&&true::or::false::and::false&&&";
-    	String test = "false::or::true&&&or&&&true::or::false::and::false&&&";
+    	String test = "false::or::lies:!=:pies&&&and&&&true::or::false::and::1:!=:2";
     	
     	//check if string is empty
     	if (input != null && !input.isEmpty()) {
@@ -611,4 +674,3 @@ public class FileDialogTest {
 	}
 
 }
-
