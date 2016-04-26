@@ -21,7 +21,6 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 //## operation selectCSVFile() 
 import Business.Model.WFAData;
-import java.awt.FileDialog;
 
 //----------------------------------------------------------------------------
 // TechServices/CSVReader/CSVReader.java                                                                  
@@ -49,7 +48,6 @@ public class CSVReader {
      * @return WFAData created from the user-selected csv file
     */
     public WFAData selectCSVFile() {
-    	System.out.println("select csv file button pressed");
 		WFAData data = new WFAData();
 		
 		//create a new file chooser and set it's default directory
@@ -110,4 +108,3 @@ public class CSVReader {
 /*********************************************************************
 	File Path	: DefaultComponent/DefaultConfig/TechServices/CSVReader/CSVReader.java
 *********************************************************************/
-
