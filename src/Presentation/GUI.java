@@ -45,8 +45,8 @@ public class GUI extends JFrame {
 	private static String metric = "";
 	private String dims = "";	
 	static int DimRows = 1;
-	private static String[] ComboBoxOps = new String[] {">", ">=", "=", "<=", "<"};
-	private static String[] ComboBoxBools = new String[] {"AND", "OR"};
+	private static String[] ComboBoxOps = new String[] {" ", "=", ">", "<", "!="};
+	private static String[] ComboBoxBools = new String[] {" ", "AND", "OR"};
 		
 	static DefaultComboBoxModel<String> SelectMetricComboBoxModel = new DefaultComboBoxModel<String>();
 	static DefaultComboBoxModel<String> DimSelectComboBoxModel1 = new DefaultComboBoxModel<String>();
@@ -387,7 +387,7 @@ public class GUI extends JFrame {
 		SelectCSVFilesPanel.add(resetCSVButton);
 
 		DimensionsSelectionPanel.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0)), "Dimensions Selection", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		DimensionsSelectionPanel.setBounds(240, 11, 813, 203);
+		DimensionsSelectionPanel.setBounds(240, 14, 813, 203);
 		WFA_GUI.add(DimensionsSelectionPanel);
 		DimensionsSelectionPanel.setLayout(null);
 
