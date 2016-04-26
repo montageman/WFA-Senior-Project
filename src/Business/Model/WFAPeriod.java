@@ -29,9 +29,12 @@ public class WFAPeriod {
     
     
     // Constructors
-    
+
     //## auto_generated 
     public  WFAPeriod() {
+    	start = new WFAData();
+    	end = new WFAData();
+    	activity = new WFAData();
     }
     
     //## auto_generated 

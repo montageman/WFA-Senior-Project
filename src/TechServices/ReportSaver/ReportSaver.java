@@ -10,6 +10,13 @@
 
 package TechServices.ReportSaver;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 
 //----------------------------------------------------------------------------
 // TechServices/ReportSaver/ReportSaver.java                                                                  
@@ -29,13 +36,36 @@ public class ReportSaver {
     }
     
     /**
-     * @param trendReport
+     * Saves the given report into a txt file. This method also
+     * displays a JFileChooser to let the user choose where to
+     * save the report.
+     * 
+     * @author Daren Cheng
+     * @param report the report to be written to the file
     */
-    //## operation exportData(String) 
-    public void exportData(String trendReport) {
-        //#[ operation exportData(String) 
-        //#]
-    }
+    public void exportData(String report) {
+		//create a new file chooser and set it's default directory
+		JFileChooser chooser = new JFileChooser();
+	    
+		//set default directory and type of the file
+	    chooser.setCurrentDirectory(new File(System.getProperty("user.home")));
+	    chooser.setFileFilter(new FileNameExtensionFilter("Text Files", "txt"));
+	    
+	    //show file saver
+	    int fileSaved = chooser.showSaveDialog(null);
+	    
+	    //check if file was selected, save file if so
+	    if(fileSaved == JFileChooser.APPROVE_OPTION) {
+	    	
+	    	//try to save the file
+	    	try(FileWriter fw = new FileWriter(chooser.getSelectedFile()+".txt")) {
+	    	    fw.write(report);
+	    	} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	    }
+	}
     
 }
 /*********************************************************************

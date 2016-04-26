@@ -69,13 +69,13 @@ public class Controller {
      * and then calculates trends on the filtered WFA Period.
      * 
      * @author Daren Cheng
-     * @param start the WFAData for the start of this WFA Period
-     * @param end the WFAData for the end of this WFA Period
-     * @param activity the WFAData for the activities during this WFA Period
+     * @param operations the boolean operations used to filter the WFA Period
+     * @param metric the column to be used as a metric during trend calculation
+     * @param dims the column to be used as a dimension during trend calculation
     */ 
-    public Trend calculateTrends(String operations) {
+    public Trend calculateTrend(String operations, String metric, String dims) {
 		WFAPeriod filteredPeriod = boolOpExecutor.getFilteredPeriod(period, operations);
-		Trend trend = trendCalculator.calculateTrend(filteredPeriod);
+		Trend trend = trendCalculator.calculateTrend(filteredPeriod, metric, dims);
 		return(trend);
     }
     
@@ -110,10 +110,12 @@ public class Controller {
      * 
      * @author Daren Cheng
      * @param trend the Trend to create the report from
+     * @param metric the metric used in generating the report
+     * @param dims the dims used in generating the report
      * @return A report based off of the current trend 
     */
-    public String generateReport(Trend trend) {
-    	String report = trendCalculator.generateReport(trend);
+    public String generateReport(Trend trend, String metric, String dims) {
+    	String report = trendCalculator.generateReport(trend, metric, dims);
 		return report;
     }
     
