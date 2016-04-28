@@ -62,10 +62,16 @@ public class CSVReader {
 	    
 	    //check if file was selected, process file if so
 	    if(fileSelected == JFileChooser.APPROVE_OPTION) {
-	    	ArrayList<String> lines = new ArrayList<String>();
+	       File CSVFile = chooser.getSelectedFile();
+	       
+	       //check if file is CSV file
+	       String[] CSVFileSplit = (CSVFile.getName()).split("[.]");	       
+	       if(!CSVFileSplit[CSVFileSplit.length-1].equals("csv"))
+	    	   return null;
+	    	    	
+	       ArrayList<String> lines = new ArrayList<String>();
 	    	
            //get every line of the csv file
-           File CSVFile = chooser.getSelectedFile();
            try {
         	   Scanner s = new Scanner(CSVFile);
         	   while(s.hasNextLine()) {
