@@ -107,11 +107,11 @@ public class BooleanOperationExecutor {
     	String operand2 = tokens[2];
     	
     	//need to find the matching value for operand1
-    	System.out.print(operand1 + ", " + columns.indexOf(operand1) 
-    			+ ", " + entries.size() + ": ");
+/*    	System.out.print(operand1 + ", " + columns.indexOf(operand1) 
+    			+ ", " + entries.size() + ": ");*/
     	
     	operand1 = entries.get(columns.indexOf(operand1));
-    	System.out.println(operand1);
+//    	System.out.println(operand1);
     	
     	//find matching statement operation
     	//note: the following is a possible candidate for polymorphism

@@ -338,7 +338,7 @@ public class GUI extends JFrame {
 				start = controller.selectCSVFile();
 				
 				if(!(start != null))
-					JOptionPane.showMessageDialog(null,"The file you selected is not a CSV file.","INCORRECT FILETYPE ALERT",JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(null,"Either you did not select a file, or the file you selected is not a CSV file.","INCORRECT FILETYPE ALERT",JOptionPane.WARNING_MESSAGE);
 				else
 				{
 					SelectStartCSVButton.setEnabled(false);
@@ -357,7 +357,7 @@ public class GUI extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				end = controller.selectCSVFile();
 				if(!(end != null))
-					JOptionPane.showMessageDialog(null,"The file you selected is not a CSV file.","INCORRECT FILETYPE ALERT",JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(null,"Either you did not select a file, or the file you selected is not a CSV file.","INCORRECT FILETYPE ALERT",JOptionPane.WARNING_MESSAGE);
 				else
 				{				
 					SelectEndCSVButton.setEnabled(false);
@@ -377,7 +377,7 @@ public class GUI extends JFrame {
 				activity = controller.selectCSVFile();
 				
 				if(!(activity != null))
-					JOptionPane.showMessageDialog(null,"The file you selected is not a CSV file.","INCORRECT FILETYPE ALERT",JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(null,"Either you did not select a file, or the file you selected is not a CSV file.","INCORRECT FILETYPE ALERT",JOptionPane.WARNING_MESSAGE);
 				else
 				{
 					SelectActivityCSVButton.setEnabled(false);
@@ -462,7 +462,7 @@ public class GUI extends JFrame {
 				
 				//code to generate operations string
 				operations = generateOperationsString();		
-				System.out.println(operations);
+				//System.out.println(operations);
 				
 				trend = controller.calculateTrend(operations, metric, dims);
 				

@@ -106,6 +106,8 @@ public class CSVReader {
         	   e.printStackTrace();
            }
 	    }
+	    else
+	    	return null;
 	    
 	    return data;
 	}
